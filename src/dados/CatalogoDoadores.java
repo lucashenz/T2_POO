@@ -17,26 +17,44 @@ public class CatalogoDoadores {
         doadores = new ArrayList<>();
     }
 
-    public void lerArquivo() {
+    //metodo 1
+    public void cadastrarDoadores() {
         Path path = Paths.get("recursos/doadores.csv");
-        try(BufferedReader bufferedReader = Files.newBufferedReader(path, Charset.defaultCharset())) {
-            String linha = null;
+        int linhaNum = 0; // contador de linha
 
+        try (BufferedReader bufferedReader = Files.newBufferedReader(path, Charset.defaultCharset())) {
+            String linha;
             while ((linha = bufferedReader.readLine()) != null) {
-                //separador
+                linhaNum++;
                 Scanner tec = new Scanner(linha).useDelimiter(";");
-                String nome;
-                String email;
-                nome = tec.next();
-                email = tec.next();
+                String nome = tec.next();
+                String email = tec.next();
 
-                System.out.println(nome + ": " + email + "; ");
+                if (emailExiste(email)) {
+                    System.out.println(linhaNum + "1:ERRO:doador repetido");
+                } else {
+                    Doador novo = new Doador(nome, email);
+                    doadores.add(novo);
+                    System.out.println("1:");
+                    doadores.toString();
+                }
+                tec.close();
             }
-        }
-        catch (IOException e) {
-            System.err.format("Erro");
+        } catch (IOException e) {
+            System.err.println("Erro ao ler o arquivo: " + e.getMessage());
         }
     }
+
+    // metodo aux
+    private boolean emailExiste(String email) {
+        for (Doador d : doadores) {
+            if (d.getEmail().equalsIgnoreCase(email)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 
 }
