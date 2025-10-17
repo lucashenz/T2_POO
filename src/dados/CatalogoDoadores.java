@@ -30,7 +30,7 @@ public class CatalogoDoadores {
                 String nome = tec.next();
                 String email = tec.next();
 
-                if (emailExiste(email)) {
+                if (buscarPorEmail(email) != null) {
                     System.out.println(linhaNum + "1:ERRO:doador repetido");
                 } else {
                     Doador novo = new Doador(nome, email);
@@ -46,13 +46,13 @@ public class CatalogoDoadores {
     }
 
     // metodo aux
-    private boolean emailExiste(String email) {
+    public Doador buscarPorEmail(String email) {
         for (Doador d : doadores) {
             if (d.getEmail().equalsIgnoreCase(email)) {
-                return true;
+                return d;
             }
         }
-        return false;
+        return null;
     }
 
 

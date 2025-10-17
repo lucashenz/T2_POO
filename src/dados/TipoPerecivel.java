@@ -10,4 +10,8 @@ public enum TipoPerecivel {
 
 	TipoPerecivel(String medicamento) {
 	}
+
+	public String getNome() {
+		return nome;
+	}
 }
