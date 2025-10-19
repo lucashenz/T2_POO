@@ -15,34 +15,64 @@ public class CatalogoDoacoes {
     private Collection<Doacao> doacoes;
     private CatalogoDoadores catalogoDoadores;
 
-    // Construtor corrigido
     public CatalogoDoacoes(CatalogoDoadores catalogoDoadores) {
         this.doacoes = new ArrayList<>();
         this.catalogoDoadores = catalogoDoadores;
     }
 
-    public void cadastrarDoacaoDePerecivel() {
+    public void cadastrarDoacoesPereciveis() {
         Path path = Paths.get("recursos/doacoespereciveis.csv");
+        int linhaNum = 0;
 
         try (BufferedReader bufferedReader = Files.newBufferedReader(path, Charset.defaultCharset())) {
             String linha;
 
-            // Ignora o cabeçalho
-            bufferedReader.readLine();
-
             while ((linha = bufferedReader.readLine()) != null) {
-                try {
-                    Scanner sc = new Scanner(linha).useDelimiter(";");
+                linhaNum++;
 
-                    // ordem do CSV: DESCRICAO;VALOR;QUANTIDADE;E-MAIL;TIPO;VALIDADE
-                    String descricao = sc.next();
-                    double valor = Double.parseDouble(sc.next());
-                    int quantidade = Integer.parseInt(sc.next());
-                    String emailDoador = sc.next();
-                    String tipoStr = sc.next().toUpperCase();
-                    int validade = Integer.parseInt(sc.next());
+                if (linha.trim().isEmpty()) continue;
 
-                    // valida tipo
+                if (linha.toLowerCase().contains("descricao") && linha.toLowerCase().contains("tipo")) continue;
+
+                try (Scanner sc = new Scanner(linha).useDelimiter("[;\t]")) {
+
+                    if (!sc.hasNext()) continue;
+                    String descricao = sc.next().trim();
+
+                    if (!sc.hasNext()) continue;
+                    String valorStr = sc.next().trim();
+
+                    if (!sc.hasNext()) continue;
+                    String quantidadeStr = sc.next().trim();
+
+                    if (!sc.hasNext()) continue;
+                    String emailDoador = sc.next().trim();
+
+                    if (!sc.hasNext()) continue;
+                    String tipoStr = sc.next().trim().toUpperCase();
+
+                    if (!sc.hasNext()) continue;
+                    String validadeStr = sc.next().trim();
+
+                    double valor;
+                    int quantidade;
+                    int validade;
+
+                    try {
+                        valor = Double.parseDouble(valorStr);
+                        quantidade = Integer.parseInt(quantidadeStr);
+                        validade = Integer.parseInt(validadeStr);
+                    } catch (NumberFormatException e) {
+                        System.out.println("2:ERRO:formato invalido");
+                        continue;
+                    }
+
+                    Doador doador = catalogoDoadores.buscarPorEmail(emailDoador);
+                    if (doador == null) {
+                        System.out.println("2:ERRO:doador inexistente");
+                        continue;
+                    }
+
                     TipoPerecivel tipo;
                     if (tipoStr.equals("ALIMENTO")) {
                         tipo = TipoPerecivel.ALIMENTO;
@@ -53,29 +83,101 @@ public class CatalogoDoacoes {
                         continue;
                     }
 
-                    // busca doador
-                    Doador doador = catalogoDoadores.buscarPorEmail(emailDoador);
-                    if (doador == null) {
-                        System.out.println("2:ERRO:doador inexistente");
-                        continue;
-                    }
-
-                    // cria o objeto Perecivel usando o construtor da sua classe
                     Perecivel p = new Perecivel(descricao, valor, quantidade, doador, validade, tipo);
-
-                    // adiciona ao catálogo
                     doacoes.add(p);
 
-                    // exibe resumo
-                    System.out.println("2:" + p.geraResumo());
+                    System.out.println("2:" + descricao + "," + valor + "," + quantidade + "," + tipo + "," + validade);
 
-                } catch (NumberFormatException e) {
+                } catch (Exception e) {
                     System.out.println("2:ERRO:formato invalido");
                 }
             }
 
         } catch (IOException e) {
-            System.err.println("Erro ao ler arquivo de doações perecíveis.");
+            System.err.println("Erro ao ler o arquivo de doações perecíveis: " + e.getMessage());
         }
     }
+
+    public void cadastrarDoacoesDuraveis() {
+        Path path = Paths.get("recursos/doacoesduraveis.csv");
+        int linhaNum = 0;
+
+        try (BufferedReader bufferedReader = Files.newBufferedReader(path, Charset.defaultCharset())) {
+            String linha;
+
+            while ((linha = bufferedReader.readLine()) != null) {
+                linhaNum++;
+
+                if (linha.trim().isEmpty()) continue;
+
+                if (linha.toLowerCase().contains("descricao") && linha.toLowerCase().contains("tipo")) continue;
+
+                try (Scanner sc = new Scanner(linha).useDelimiter("[;\t]")) {
+
+                    if (!sc.hasNext()) continue;
+                    String descricao = sc.next().trim();
+
+                    if (!sc.hasNext()) continue;
+                    String valorStr = sc.next().trim();
+
+                    if (!sc.hasNext()) continue;
+                    String quantidadeStr = sc.next().trim();
+
+                    if (!sc.hasNext()) continue;
+                    String emailDoador = sc.next().trim();
+
+                    if (!sc.hasNext()) continue;
+                    String tipoStr = sc.next().trim().toUpperCase();
+
+                    double valor;
+                    int quantidade;
+                    int validade;
+
+                    try {
+                        valor = Double.parseDouble(valorStr);
+                        quantidade = Integer.parseInt(quantidadeStr);
+                    } catch (NumberFormatException e) {
+                        System.out.println("3:ERRO:formato invalido");
+                        continue;
+                    }
+
+                    Doador doador = catalogoDoadores.buscarPorEmail(emailDoador);
+                    if (doador == null) {
+                        System.out.println("3:ERRO:doador inexistente");
+                        continue;
+                    }
+
+                    TipoDuravel tipo;
+                    if (tipoStr.equals("ROUPA")) {
+                        tipo = TipoDuravel.ROUPA;
+                    } else if (tipoStr.equals("MOVEL")) {
+                        tipo = TipoDuravel.MOVEL;
+                    } else if (tipoStr.equals("MOVEL")) {
+                        tipo = TipoDuravel.MOVEL;
+                    } else if (tipoStr.equals("BRINQUEDO")) {
+                        tipo = TipoDuravel.BRINQUEDO;
+                    } else if (tipoStr.equals("ELETRODOMESTICO")) {
+                        tipo = TipoDuravel.ELETRODOMESTICO;
+                    } else {
+                        System.out.println("3:ERRO:tipo invalido");
+                        continue;
+                    }
+
+                    Duravel d = new Duravel(descricao, valor, quantidade, doador, tipo);
+                    doacoes.add(d);
+
+                    System.out.println("3:" + descricao + "," + valor + "," + quantidade + "," + tipo);
+
+                } catch (Exception e) {
+                    System.out.println("3:ERRO:formato invalido");
+                }
+            }
+
+        } catch (IOException e) {
+            System.err.println("Erro ao ler o arquivo de doações perecíveis: " + e.getMessage());
+        }
+    }
+
+
+
 }
