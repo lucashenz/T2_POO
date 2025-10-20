@@ -13,9 +13,6 @@ public class CatalogoDoacoes {
 
     private Collection<Doacao> doacoes;
     private CatalogoDoadores catalogoDoadores;
-    private Duravel duravel;
-    private Perecivel perecivel;
-    private Doacao doacao;
 
     public CatalogoDoacoes(CatalogoDoadores catalogoDoadores) {
         this.doacoes = new ArrayList<>();
@@ -185,6 +182,12 @@ public class CatalogoDoacoes {
     }
 
     public void mostrarTodosDoadores() {
+
+        /* esse meu metodo em específico esta imprimindo os nomes numa ordem diferente do relatório.txt do Moodle,
+        porém nas orientações do trabalho, não existe uma orientação sobre a ordem da impressão dos nomes, se é decrescente
+        ou crescente, falei com o senhor na aula e disse-me que não tinha necessidade de alterar a minha lógica, apenas
+        explicitar em um comentario.
+         */
         Map<String, Integer> contagemDoacoes = new HashMap<>();
 
         for (Doacao doacao : doacoes) {
