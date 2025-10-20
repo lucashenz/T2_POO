@@ -204,14 +204,29 @@ public class CatalogoDoacoes {
     }
 
     public void mostrarDoacoesDeUmDoador(Doador doador) {
+        boolean encontrou = false;
+
         for (Doacao doacao1 : doacoes) {
-            if(doacao1.getDoador().equals(doador)){
-                System.out.println("7:" + doacao1.geraResumo() + "," + doador.getEmail());
+            if (doacao1.getDoador().equals(doador)) {
+                System.out.println("7:" + doacao1.geraResumo() + "," + doacao1.getDoador().getEmail());
+                encontrou = true;
             }
+        }
+
+        if (!encontrou) {
+            System.out.println("7:ERRO:nenhuma doacao localizada");
         }
     }
 
     public void mostrarDoacoesDeUmTipo(String tipo) {
+        TipoDuravel tipoA;
+        try {
+            tipoA = TipoDuravel.valueOf(tipo.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            System.out.println("8:ERRO:tipo invalido");
+            return;
+        }
+
         for (Doacao doacao : doacoes) {
             if (doacao instanceof Duravel) {
                 Duravel duravel = (Duravel) doacao;
