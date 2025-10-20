@@ -7,6 +7,7 @@ public abstract class Doacao {
     private int quantidade;
     private Doador doador;
 
+
     public Doacao(String descricao, double valor, int quantidade, Doador doador) {
         this.descricao = descricao;
         this.valor = valor;

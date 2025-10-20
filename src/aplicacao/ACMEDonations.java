@@ -2,6 +2,7 @@ package aplicacao;
 
 import dados.CatalogoDoacoes;
 import dados.CatalogoDoadores;
+import dados.Doador;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -25,10 +26,13 @@ public class ACMEDonations {
 
 
         //metodos
-        catalogoDoadores.cadastrarDoadores();
-        catalogoDoacoes.cadastrarDoacoesPereciveis();
-        catalogoDoacoes.cadastrarDoacoesDuraveis();
-        mostrarDadosDeUmDoador();
+        catalogoDoadores.cadastrarDoadores(); // 1
+        catalogoDoacoes.cadastrarDoacoesPereciveis(); // 2
+        catalogoDoacoes.cadastrarDoacoesDuraveis(); // 3
+        mostrarDadosDeUmDoador(); // 4
+        catalogoDoacoes.mostraTodasDoacoes(); // 5
+        catalogoDoacoes.mostrarTodosDoadores(); // 6
+        mostrarDoacaoPorNome();// 7
     }
 
     private void mostrarDadosDeUmDoador() {
@@ -42,14 +46,34 @@ public class ACMEDonations {
                 String emailDoador = tec.next().trim();
 
                 if (catalogoDoadores.buscarPorEmail(emailDoador) != null) {
-                    System.out.println("4:" + catalogoDoadores.imprimeDoadorEmail(emailDoador));
+                    System.out.println("4:" + catalogoDoadores.buscarPorEmail(emailDoador));
                 } else {
                     System.out.println("4:ERRO:e-mail inexistente");
                 }
-
-                tec.close();
             } else {
                 System.out.println("Arquivo vazio");
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void mostrarDoacaoPorNome() {
+        Path path = Paths.get("recursos/dadosentrada.txt");
+
+        try (BufferedReader bufferedReader = Files.newBufferedReader(path, Charset.defaultCharset())) {
+
+            bufferedReader.readLine();
+
+            String linha = bufferedReader.readLine();
+
+            if (linha != null) {
+                Scanner tec = new Scanner(linha);
+                String nomeDoador = tec.nextLine().trim();
+
+                Doador doador = catalogoDoadores.buscarPorNome(nomeDoador);
+                catalogoDoacoes.mostrarDoacoesDeUmDoador(doador);
             }
 
         } catch (IOException e) {

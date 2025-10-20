@@ -6,14 +6,15 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Scanner;
+import java.util.*;
 
 public class CatalogoDoacoes {
 
     private Collection<Doacao> doacoes;
     private CatalogoDoadores catalogoDoadores;
+    private Duravel duravel;
+    private Perecivel perecivel;
+    private Doacao doacao;
 
     public CatalogoDoacoes(CatalogoDoadores catalogoDoadores) {
         this.doacoes = new ArrayList<>();
@@ -22,16 +23,14 @@ public class CatalogoDoacoes {
 
     public void cadastrarDoacoesPereciveis() {
         Path path = Paths.get("recursos/doacoespereciveis.csv");
-        int linhaNum = 0;
 
         try (BufferedReader bufferedReader = Files.newBufferedReader(path, Charset.defaultCharset())) {
             String linha;
 
             while ((linha = bufferedReader.readLine()) != null) {
-                linhaNum++;
 
                 if (linha.trim().isEmpty()) continue;
-
+                // ignora cabeçalho
                 if (linha.toLowerCase().contains("descricao") && linha.toLowerCase().contains("tipo")) continue;
 
                 try (Scanner sc = new Scanner(linha).useDelimiter("[;\t]")) {
@@ -73,13 +72,12 @@ public class CatalogoDoacoes {
                         continue;
                     }
 
+                    // Converte tipoStr para enum de forma segura
                     TipoPerecivel tipo;
-                    if (tipoStr.equals("ALIMENTO")) {
-                        tipo = TipoPerecivel.ALIMENTO;
-                    } else if (tipoStr.equals("MEDICAMENTO")) {
-                        tipo = TipoPerecivel.MEDICAMENTO;
-                    } else {
-                        System.out.println("2:ERRO:tipo invalido");
+                    try {
+                        tipo = TipoPerecivel.valueOf(tipoStr);
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("2:ERRO:tipo invalido: " + tipoStr);
                         continue;
                     }
 
@@ -97,6 +95,7 @@ public class CatalogoDoacoes {
             System.err.println("Erro ao ler o arquivo de doações perecíveis: " + e.getMessage());
         }
     }
+
 
     public void cadastrarDoacoesDuraveis() {
         Path path = Paths.get("recursos/doacoesduraveis.csv");
@@ -131,7 +130,6 @@ public class CatalogoDoacoes {
 
                     double valor;
                     int quantidade;
-                    int validade;
 
                     try {
                         valor = Double.parseDouble(valorStr);
@@ -148,18 +146,10 @@ public class CatalogoDoacoes {
                     }
 
                     TipoDuravel tipo;
-                    if (tipoStr.equals("ROUPA")) {
-                        tipo = TipoDuravel.ROUPA;
-                    } else if (tipoStr.equals("MOVEL")) {
-                        tipo = TipoDuravel.MOVEL;
-                    } else if (tipoStr.equals("MOVEL")) {
-                        tipo = TipoDuravel.MOVEL;
-                    } else if (tipoStr.equals("BRINQUEDO")) {
-                        tipo = TipoDuravel.BRINQUEDO;
-                    } else if (tipoStr.equals("ELETRODOMESTICO")) {
-                        tipo = TipoDuravel.ELETRODOMESTICO;
-                    } else {
-                        System.out.println("3:ERRO:tipo invalido");
+                    try {
+                        tipo = TipoDuravel.valueOf(tipoStr);
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("3:ERRO:tipo invalido: " + tipoStr);
                         continue;
                     }
 
@@ -174,10 +164,52 @@ public class CatalogoDoacoes {
             }
 
         } catch (IOException e) {
-            System.err.println("Erro ao ler o arquivo de doações perecíveis: " + e.getMessage());
+            System.err.println("Erro ao ler o arquivo de doações duráveis: " + e.getMessage());
         }
     }
 
+    public void mostraTodasDoacoes() {
+        if (doacoes.isEmpty()) {
+            System.out.println("5:ERRO:nenhuma doacao cadastrada");
+            return;
+        }
+        for (Doacao doacao : doacoes) {
+            String resumo = doacao.geraResumo();
+            Doador doador = doacao.getDoador();
+            if (doador != null) {
+                resumo += "," + doador.getNome() + "," + doador.getEmail();
+            }
+            System.out.println("5:" + resumo);
+        }
+    }
 
+    public void mostrarTodosDoadores() {
+        Map<String, Integer> contagemDoacoes = new HashMap<>();
+
+        for (Doacao doacao : doacoes) {
+            Doador doador = doacao.getDoador();
+            if (doador == null) {
+                System.out.println("6:ERRO:nenhum doador encontrado.");
+            }
+
+            String email = doador.getEmail();
+            contagemDoacoes.put(email, contagemDoacoes.getOrDefault(email, 0) + 1);
+        }
+
+        for (String email : contagemDoacoes.keySet()) {
+            Doador doador = catalogoDoadores.buscarPorEmail(email);
+            int qtd = contagemDoacoes.get(email);
+            System.out.println("6:" + doador.getNome() + "," + doador.getEmail() + "," + qtd);
+        }
+    }
+
+    public void mostrarDoacoesDeUmDoador(Doador doador) {
+        for (Doacao doacao1 : doacoes) {
+            if(doacao1.getDoador().equals(doador)){
+                System.out.println("7:" + doacao1.geraResumo() + "," + doador.getEmail());
+            }
+        }
+
+    }
 
 }

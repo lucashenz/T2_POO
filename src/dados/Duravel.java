@@ -9,12 +9,13 @@ public class Duravel extends Doacao {
         this.tipoDuravel = tipo;
     }
 
-    public TipoDuravel getTipo() {
-        return null;
+    public TipoDuravel getTipoDuravel() {
+        return tipoDuravel;
     }
 
+    @Override
     public String geraResumo() {
-        return null;
+        return getDescricao() + "," + getValor() + "," + getQuantidade() + "," +tipoDuravel.getNome();
     }
 
 }

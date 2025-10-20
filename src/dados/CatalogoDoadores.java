@@ -63,12 +63,15 @@ public class CatalogoDoadores {
         return null;
     }
 
-    public String imprimeDoadorEmail(String email) {
-        for(Doador doador : doadores) {
-            if(email.equalsIgnoreCase(doador.getEmail())) {
-                return (doador.getNome() + ", " + doador.getEmail());
+    public Doador buscarPorNome(String nome) {
+        for (Doador d : doadores) {
+            if (d.getNome().equalsIgnoreCase(nome)) {
+                return d;
             }
         }
         return null;
     }
+
+
+
 }

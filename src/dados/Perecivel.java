@@ -29,6 +29,6 @@ public class Perecivel extends Doacao {
 
 	@Override
 	public String geraResumo() {
-		return getDescricao() + "," + getValor() + "," + getQuantidade() + "," + tipoPerecivel.getNome() + "," + validade;
+		return getDescricao() + "," + getValor() + "," + getQuantidade() + "," +tipoPerecivel.getNome() + "," + validade;
 	}
 }
