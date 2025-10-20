@@ -1,5 +1,5 @@
-1:Maria da Silva, maria.silva@email.com
-1:Pedro de Souza, pedro_souza@email.com
+1:Maria da Silva,maria.silva@email.com
+1:Pedro de Souza,pedro_souza@email.com
 2:Leite,11.11,11,ALIMENTO,11
 2:Aspirina,22.22,22,MEDICAMENTO,22
 3:Casaco,22.22,2,ROUPA

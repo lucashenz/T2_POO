@@ -23,34 +23,48 @@ public class CatalogoDoadores {
 
         try (BufferedReader bufferedReader = Files.newBufferedReader(path, Charset.defaultCharset())) {
             String linha;
+
             while ((linha = bufferedReader.readLine()) != null) {
                 linhaNum++;
 
                 if (linha.trim().isEmpty()) continue;
-
                 if (linha.toLowerCase().contains("nome") && linha.toLowerCase().contains("mail")) continue;
 
-                Scanner tec = new Scanner(linha).useDelimiter("[;\t]");
+                try (Scanner tec = new Scanner(linha).useDelimiter("[;\t]")) {
+                    if (!tec.hasNext()) throw new IllegalArgumentException();
+                    String nome = tec.next().trim();
 
-                if (!tec.hasNext()) continue;
-                String nome = tec.next().trim();
+                    if (!tec.hasNext()) throw new IllegalArgumentException();
+                    String email = tec.next().trim();
 
-                if (!tec.hasNext()) continue;
-                String email = tec.next().trim();
+                    if (nome.isEmpty() || !nome.equals(nome.trim()) || nome.contains("  ")) {
+                        throw new IllegalArgumentException();
+                    }
 
-                if (buscarPorEmail(email) != null) {
-                    System.out.println(linhaNum + "1:ERRO:doador repetido. ");
-                } else {
+                    if (email.isEmpty() || email.contains(" ") ||
+                            !email.matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")) {
+                        throw new IllegalArgumentException();
+                    }
+
+                    if (buscarPorEmail(email) != null) {
+                        System.out.println("1:ERRO:doador repetido.");
+                        continue;
+                    }
+
                     Doador novo = new Doador(nome, email);
                     doadores.add(novo);
-                    System.out.println("1:" + nome + ", " + email);
-                }
+                    System.out.println("1:" + novo.toString());
 
+                } catch (Exception e) {
+                    System.out.println("1:ERRO:formato invalido.");
+                }
             }
+
         } catch (IOException e) {
             System.err.println("Erro ao ler o arquivo: " + e.getMessage());
         }
     }
+
 
     // metodo aux
     public Doador buscarPorEmail(String email) {

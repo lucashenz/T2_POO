@@ -31,7 +31,6 @@ public class CatalogoDoacoes {
             while ((linha = bufferedReader.readLine()) != null) {
 
                 if (linha.trim().isEmpty()) continue;
-                // ignora cabeçalho
                 if (linha.toLowerCase().contains("descricao") && linha.toLowerCase().contains("tipo")) continue;
 
                 try (Scanner sc = new Scanner(linha).useDelimiter("[;\t]")) {
@@ -63,22 +62,21 @@ public class CatalogoDoacoes {
                         quantidade = Integer.parseInt(quantidadeStr);
                         validade = Integer.parseInt(validadeStr);
                     } catch (NumberFormatException e) {
-                        System.out.println("2:ERRO:formato invalido");
+                        System.out.println("2:ERRO:formato invalido.");
                         continue;
                     }
 
                     Doador doador = catalogoDoadores.buscarPorEmail(emailDoador);
                     if (doador == null) {
-                        System.out.println("2:ERRO:doador inexistente");
+                        System.out.println("2:ERRO:doador inexistente.");
                         continue;
                     }
 
-                    // Converte tipoStr para enum de forma segura
                     TipoPerecivel tipo;
                     try {
                         tipo = TipoPerecivel.valueOf(tipoStr);
                     } catch (IllegalArgumentException e) {
-                        System.out.println("2:ERRO:tipo invalido: " + tipoStr);
+                        System.out.println("2:ERRO:tipo invalido.");
                         continue;
                     }
 
@@ -110,23 +108,24 @@ public class CatalogoDoacoes {
 
                 if (linha.trim().isEmpty()) continue;
 
+                // pula cabeçalho
                 if (linha.toLowerCase().contains("descricao") && linha.toLowerCase().contains("tipo")) continue;
 
                 try (Scanner sc = new Scanner(linha).useDelimiter("[;\t]")) {
 
-                    if (!sc.hasNext()) continue;
+                    if (!sc.hasNext()) throw new IllegalArgumentException();
                     String descricao = sc.next().trim();
 
-                    if (!sc.hasNext()) continue;
+                    if (!sc.hasNext()) throw new IllegalArgumentException();
                     String valorStr = sc.next().trim();
 
-                    if (!sc.hasNext()) continue;
+                    if (!sc.hasNext()) throw new IllegalArgumentException();
                     String quantidadeStr = sc.next().trim();
 
-                    if (!sc.hasNext()) continue;
+                    if (!sc.hasNext()) throw new IllegalArgumentException();
                     String emailDoador = sc.next().trim();
 
-                    if (!sc.hasNext()) continue;
+                    if (!sc.hasNext()) throw new IllegalArgumentException();
                     String tipoStr = sc.next().trim().toUpperCase();
 
                     double valor;
@@ -136,13 +135,13 @@ public class CatalogoDoacoes {
                         valor = Double.parseDouble(valorStr);
                         quantidade = Integer.parseInt(quantidadeStr);
                     } catch (NumberFormatException e) {
-                        System.out.println("3:ERRO:formato invalido");
+                        System.out.println("3:ERRO:formato invalido.");
                         continue;
                     }
 
                     Doador doador = catalogoDoadores.buscarPorEmail(emailDoador);
                     if (doador == null) {
-                        System.out.println("3:ERRO:doador inexistente");
+                        System.out.println("3:ERRO:doador inexistente.");
                         continue;
                     }
 
@@ -150,7 +149,7 @@ public class CatalogoDoacoes {
                     try {
                         tipo = TipoDuravel.valueOf(tipoStr);
                     } catch (IllegalArgumentException e) {
-                        System.out.println("3:ERRO:tipo invalido: " + tipoStr);
+                        System.out.println("3:ERRO:tipo invalido.");
                         continue;
                     }
 
@@ -160,7 +159,7 @@ public class CatalogoDoacoes {
                     System.out.println("3:" + descricao + "," + valor + "," + quantidade + "," + tipo);
 
                 } catch (Exception e) {
-                    System.out.println("3:ERRO:formato invalido");
+                    System.out.println("3:ERRO:formato invalido.");
                 }
             }
 
@@ -168,6 +167,7 @@ public class CatalogoDoacoes {
             System.err.println("Erro ao ler o arquivo de doações duráveis: " + e.getMessage());
         }
     }
+
 
     public void mostraTodasDoacoes() {
         if (doacoes.isEmpty()) {
