@@ -46,7 +46,6 @@ public class CatalogoDoadores {
                     System.out.println("1:" + nome + ", " + email);
                 }
 
-                tec.close();
             }
         } catch (IOException e) {
             System.err.println("Erro ao ler o arquivo: " + e.getMessage());

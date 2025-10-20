@@ -36,6 +36,7 @@ public class ACMEDonations {
         mostrarDoacaoPorNome();// 7
         mostrarDoacoesDeUmTipo(); // 8
         doacaoPerecivelComMaiorQtd(); // 9
+        catalogoDoacoes.mostrarDoadorComMaiorSomatorioDeDoacoes(); // ponto bonus
     }
 
     private void mostrarDadosDeUmDoador() {

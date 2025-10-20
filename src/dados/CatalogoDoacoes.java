@@ -6,6 +6,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.*;
 
 public class CatalogoDoacoes {
@@ -270,6 +271,37 @@ public class CatalogoDoacoes {
         System.out.println("9:" + maiorDoacao.geraResumo() + "," +
                 maiorDoacao.getDoador().getNome() + "," +
                 maiorDoacao.getDoador().getEmail());
+    }
+
+    public void mostrarDoadorComMaiorSomatorioDeDoacoes() {
+        Doador maiorDoador = null;
+        double maiorDoacao = 0;
+
+        for (Doacao doacao1 : doacoes) {
+            Doador doadorAtual = doacao1.getDoador();
+            double totalDoacoesDoDoador = 0;
+
+            for (Doacao doacao2 : doacoes) {
+                if (doacao2.getDoador().equals(doadorAtual)) {
+                    totalDoacoesDoDoador += doacao2.getValor();
+                }
+            }
+
+            if (totalDoacoesDoDoador > maiorDoacao) {
+                maiorDoacao = totalDoacoesDoDoador;
+                maiorDoador = doadorAtual;
+            }
+        }
+
+        double maiorSomatorio = maiorDoacao;
+        DecimalFormat formato = new DecimalFormat("#.##");
+        maiorSomatorio = Double.valueOf(formato.format(maiorDoacao));
+
+        if(maiorDoador != null) {
+            System.out.println("10:" + maiorDoador + "," + maiorSomatorio);
+        } else {
+            System.out.println("10:ERRO:nenhum doador localizado.");
+        }
     }
 
 }
