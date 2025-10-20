@@ -35,6 +35,7 @@ public class ACMEDonations {
         catalogoDoacoes.mostrarTodosDoadores(); // 6
         mostrarDoacaoPorNome();// 7
         mostrarDoacoesDeUmTipo(); // 8
+        doacaoPerecivelComMaiorQtd(); // 9
     }
 
     private void mostrarDadosDeUmDoador() {
@@ -98,6 +99,28 @@ public class ACMEDonations {
                 String tipo = tec.nextLine().trim();
 
                 catalogoDoacoes.mostrarDoacoesDeUmTipo(tipo);
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void doacaoPerecivelComMaiorQtd() {
+        Path path = Paths.get("recursos/dadosentrada.txt");
+
+        try (BufferedReader bufferedReader = Files.newBufferedReader(path, Charset.defaultCharset())) {
+
+            bufferedReader.readLine();
+            bufferedReader.readLine();
+            bufferedReader.readLine();
+            String linha4 = bufferedReader.readLine();
+
+            if (linha4 != null) {
+                Scanner tec = new Scanner(linha4);
+                String tipo = tec.nextLine().trim();
+
+                catalogoDoacoes.doacaoPerecivelComMaiorQtd(tipo);
             }
 
         } catch (IOException e) {

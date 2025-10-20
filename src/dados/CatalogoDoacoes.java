@@ -225,4 +225,36 @@ public class CatalogoDoacoes {
         }
     }
 
+    public void doacaoPerecivelComMaiorQtd(String tipoStr) {
+        TipoPerecivel tipo;
+        try {
+            tipo = TipoPerecivel.valueOf(tipoStr.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            System.out.println("9:ERRO:tipo invalido");
+            return;
+        }
+
+        Perecivel maiorDoacao = null;
+
+        for (Doacao doacao : doacoes) {
+            if (doacao instanceof Perecivel) {
+                Perecivel perecivel = (Perecivel) doacao;
+                if (perecivel.getTipoPerecivel() == tipo) {
+                    if (maiorDoacao == null || perecivel.getQuantidade() > maiorDoacao.getQuantidade()) {
+                        maiorDoacao = perecivel;
+                    }
+                }
+            }
+        }
+
+        if (maiorDoacao == null) {
+            System.out.println("9:ERRO:nenhuma doacao localizada");
+            return;
+        }
+
+        System.out.println("9:" + maiorDoacao.geraResumo() + "," +
+                maiorDoacao.getDoador().getNome() + "," +
+                maiorDoacao.getDoador().getEmail());
+    }
+
 }
