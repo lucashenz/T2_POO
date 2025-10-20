@@ -17,3 +17,4 @@
 6:Maria da Silva,maria.silva@email.com,2
 7:Aspirina,22.22,22,MEDICAMENTO,22,maria.silva@email.com
 7:TV,444.44,4,ELETRODOMESTICO,maria.silva@email.com
+8:Uno,3.3,3,BRINQUEDO,Pedro de Souza,pedro_souza@email.com

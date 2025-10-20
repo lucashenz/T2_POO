@@ -2,6 +2,7 @@ package aplicacao;
 
 import dados.CatalogoDoacoes;
 import dados.CatalogoDoadores;
+import dados.Doacao;
 import dados.Doador;
 
 import java.io.BufferedReader;
@@ -33,6 +34,7 @@ public class ACMEDonations {
         catalogoDoacoes.mostraTodasDoacoes(); // 5
         catalogoDoacoes.mostrarTodosDoadores(); // 6
         mostrarDoacaoPorNome();// 7
+        mostrarDoacoesDeUmTipo(); // 8
     }
 
     private void mostrarDadosDeUmDoador() {
@@ -81,6 +83,27 @@ public class ACMEDonations {
         }
     }
 
+    private void mostrarDoacoesDeUmTipo() {
+        Path path = Paths.get("recursos/dadosentrada.txt");
+
+        try (BufferedReader bufferedReader = Files.newBufferedReader(path, Charset.defaultCharset())) {
+
+            bufferedReader.readLine();
+            bufferedReader.readLine();
+
+            String linha3 = bufferedReader.readLine();
+
+            if (linha3 != null) {
+                Scanner tec = new Scanner(linha3);
+                String tipo = tec.nextLine().trim();
+
+                catalogoDoacoes.mostrarDoacoesDeUmTipo(tipo);
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     private void redirecionaSaida() {
         try {

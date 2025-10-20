@@ -209,7 +209,20 @@ public class CatalogoDoacoes {
                 System.out.println("7:" + doacao1.geraResumo() + "," + doador.getEmail());
             }
         }
+    }
 
+    public void mostrarDoacoesDeUmTipo(String tipo) {
+        for (Doacao doacao : doacoes) {
+            if (doacao instanceof Duravel) {
+                Duravel duravel = (Duravel) doacao;
+
+                if (duravel.getTipoDuravel() != null &&
+                        duravel.getTipoDuravel().getNome().equalsIgnoreCase(tipo)) {
+
+                    System.out.println("8:" + duravel.geraResumo() + "," + duravel.getDoador().getNome() + "," + duravel.getDoador().getEmail());
+                }
+            }
+        }
     }
 
 }
